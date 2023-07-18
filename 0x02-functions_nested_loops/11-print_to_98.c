@@ -1,23 +1,23 @@
 #include "main.h"
 
 /**
- * print_to_98 - print n to 98 counts
- *             separated by comma, followed
- *             by space and number should be
- *             printed in order
- *
- * @n: input
+ * jack_bauer - Prints every minute of the day of
+ *              Jack Bauer, starting from 00:00 to 23:59.
  */
-
-void print_to_98(int n)
+void jack_bauer(void)
 {
-	int count;
-	
-	if (n > 98)
-		for (count = n; count > 98; count--)
-			printf("%d, ", count);
-	else
-		for (count = n; count < 98; count++)
-			printf("%d, ", count);
-	printf("98\n");
+ int hour, minute;
+
+ for (hour = 0; hour <= 23; hour++)
+ {
+  for (minute = 0; minute <= 59; minute++)
+  {
+   _putchar((hour / 10) + '0');
+   _putchar((hour % 10) + '0');
+   _putchar(':');
+   _putchar((minute / 10) + '0');
+   _putchar((minute % 10) + '0');
+   _putchar('\n');
+  }
+ }
 }
