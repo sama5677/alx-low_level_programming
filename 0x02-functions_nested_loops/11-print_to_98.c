@@ -1,23 +1,13 @@
 #include "main.h"
 
 /**
- * jack_bauer - Prints every minute of the day of
- *              Jack Bauer, starting from 00:00 to 23:59.
+ * add - Adds two integers.
+ * @num1: The first integer to be added.
+ * @num2: The second integer to be added.
+ *
+ * Return: The result of the addition.
  */
-void jack_bauer(void)
+int add(int num1, int num2)
 {
- int hour, minute;
-
- for (hour = 0; hour <= 23; hour++)
- {
-  for (minute = 0; minute <= 59; minute++)
-  {
-   _putchar((hour / 10) + '0');
-   _putchar((hour % 10) + '0');
-   _putchar(':');
-   _putchar((minute / 10) + '0');
-   _putchar((minute % 10) + '0');
-   _putchar('\n');
-  }
- }
+ return (num1 + num2);
 }
