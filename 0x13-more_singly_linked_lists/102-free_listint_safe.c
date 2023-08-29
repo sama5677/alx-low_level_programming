@@ -1,65 +1,86 @@
 #include "lists.h"
-#include <stdlib.h>
-#include <stdio.h>
 
 /**
- * _ra - reallocates memory for an array of pointers
- * to the nodes in a linked list
- * @list: the old list to append
- * @size: size of the new list (always one more than the old list)
- * @new: new node to add to the list
+ * loop_listint_len - calculates the length of a loop in a linked list
+ * @head: pointer to the head of the linked list
  *
- * Return: pointer to the new list
+ * Return: the number of nodes in the loop, or 0 if there is no loop
  */
-listint_t **_ra(listint_t **list, size_t size, listint_t *new)
+size_t loop_listint_len(const listint_t *head)
 {
-	listint_t **newlist;
-	size_t i;
+	const listint_t *slow_ptr, *fast_ptr;
+	size_t length = 1;
 
-	newlist = malloc(size * sizeof(listint_t *));
-	if (newlist == NULL)
+	/* If the list is empty or has only one node, there is no loop */
+	if (head == NULL || head->next == NULL)
+		return (0);
+
+	slow_ptr = head->next;  /* tortoise pointer */
+	fast_ptr = head->next->next;  /* hare pointer */
+
+	/* Floyd's cycle-finding algorithm */
+	while (fast_ptr != NULL)
 	{
-		free(list);
-		exit(98);
+		if (slow_ptr == fast_ptr)
+		{
+			slow_ptr = head;
+			while (slow_ptr != fast_ptr)
+			{
+				length++;
+				slow_ptr = slow_ptr->next;
+				fast_ptr = fast_ptr->next;
+			}
+
+			slow_ptr = slow_ptr->next;
+			while (slow_ptr != fast_ptr)
+			{
+				length++;
+				slow_ptr = slow_ptr->next;
+			}
+
+			return (length);
+		}
+
+		slow_ptr = slow_ptr->next;
+		fast_ptr = fast_ptr->next->next;
 	}
-	for (i = 0; i < size - 1; i++)
-		newlist[i] = list[i];
-	newlist[i] = new;
-	free(list);
-	return (newlist);
+
+	return (0);
 }
 
 /**
- * free_listint_safe - frees a listint_t linked list.
- * @head: double pointer to the start of the list
- *
- * Return: the number of nodes in the list
+ * free_listint_safe - frees a listint_t list
+ * @h: double pointer to the head of the list
+ * Return: the size of the list that was free'd
  */
-size_t free_listint_safe(listint_t **head)
+size_t free_listint_safe(listint_t **h)
 {
-	size_t i, num = 0;
-	listint_t **list = NULL;
-	listint_t *next;
+	listint_t *tmp;
+	size_t length, i;
 
-	if (head == NULL || *head == NULL)
-		return (num);
-	while (*head != NULL)
+	length = loop_listint_len(*h);
+
+	if (length == 0)
 	{
-		for (i = 0; i < num; i++)
+		for (i = 0; *h != NULL; i++)
 		{
-			if (*head == list[i])
-			{
-				*head = NULL;
-				free(list);
-				return (num);
-			}
+			tmp = *h;
+			*h = (*h)->next;
+			free(tmp);
 		}
-		num++;
-		list = _ra(list, num, *head);
-		next = (*head)->next;
-		free(*head);
-		*head = next;
 	}
-	free(list);
-	return (num);
+	else
+	{
+		for (i = 0; i < length; i++)
+		{
+			tmp = *h;
+			*h = (*h)->next;
+			free(tmp);
+		}
+		*h = NULL;
+	}
+
+	h = NULL;
+
+	return (i);
 }
